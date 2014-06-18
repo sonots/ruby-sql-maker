@@ -9,6 +9,11 @@ SQL Builder for Ruby
 
 See [CHANGELOG.md](CHANGELOG.md) for details.
 
+## ToDo
+
+1. Support plugins
+2. Write documents
+
 ## Contributing
 
 1. Fork it
