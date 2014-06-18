@@ -20,7 +20,7 @@ class SQL::Maker
     end
     unless @quote_char = args[:quote_char]
       @quote_char =
-        if driver.to_s == 'mysql'
+        if @driver == 'mysql'
           %q{`}
         else
           %q{"}
@@ -28,7 +28,7 @@ class SQL::Maker
     end
     @select_class = @driver == 'oracle' ? SQL::Maker::Select::Oracle : SQL::Maker::Select
 
-    @name_sep = args[:name_sep] || ','
+    @name_sep = args[:name_sep] || '.'
     @new_line = args[:new_line] || "\n"
     @strict = args[:strict] || false
     @auto_bind = args[:auto_bind] || false # apply client-side prepared statement binding autocatically

@@ -60,3 +60,25 @@ describe 'SQL::Maker' do
     end
   end
 end
+
+describe 'SQL::Maker::Select' do
+  let(:builder) { SQL::Maker::Select.new(:auto_bind => true, :new_line => ' ') }
+
+  it 'auto bind' do
+    sql = builder
+      .add_select('foo')
+      .add_from('table')
+      .add_where('hoge' => "t' OR 't' = 't")
+      .as_sql
+    expect(sql).to be == %q{SELECT foo FROM table WHERE (hoge = 't'' OR ''t'' = ''t')}
+  end
+end
+
+describe 'SQL::Maker::Condition' do
+  let(:builder) { SQL::Maker::Condition.new(:auto_bind => true) }
+
+  it 'auto bind' do
+    sql = builder.add('hoge' => "t' OR 't' = 't").as_sql
+    expect(sql).to be == %q{(hoge = 't'' OR ''t'' = ''t')}
+  end
+end

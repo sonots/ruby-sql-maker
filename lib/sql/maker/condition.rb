@@ -3,14 +3,25 @@ require 'sql/query_maker'
 
 class SQL::Maker::Condition
   include SQL::Maker::Util
-  attr_accessor :sql, :bind, :strict, :name_sep, :quote_char
+  attr_accessor :quote_char, :name_sep, :strict, :auto_bind
+  attr_accessor :sql, :bind
 
   def initialize(args = {})
+    @quote_char = args[:quote_char] || ''
+    @name_sep = args[:name_sep] || '.'
+    @strict = args[:strict] || false
+    @auto_bind = args[:auto_bind] || false
+
     @sql = args[:sql] || []
     @bind = args[:bind] || []
-    @strict = args[:strict].nil? ? false : args[:strict]
-    @name_sep = args[:name_sep] || ''
-    @quote_char = args[:quote_char] || ''
+  end
+
+  def new_condition(args = {})
+    SQL::Maker::Condition.new({
+      :quote_char => self.quote_char,
+      :name_sep   => self.name_sep,
+      :strict     => self.strict,
+    }.merge(args))
   end
 
   def &(other)
@@ -125,21 +136,21 @@ class SQL::Maker::Condition
   def compose_and(other)
     if self.sql.empty?
       if other.sql.empty?
-        return SQL::Maker::Condition.new
+        return new_condition
       end
-      return SQL::Maker::Condition.new(
+      return new_condition(
         :sql => ['(' + other.as_sql() + ')'],
         :bind => other.bind,
       )
     end
     if other.sql.empty?
-      return SQL::Maker::Condition.new(
+      return new_condition(
         :sql => ['(' + self.as_sql() + ')'],
         :bind => self.bind,
       )
     end
 
-    return SQL::Maker::Condition.new(
+    return new_condition(
       :sql => ['(' + self.as_sql() + ') AND (' + other.as_sql() + ')'],
       :bind => self.bind + other.bind,
     )
@@ -148,15 +159,15 @@ class SQL::Maker::Condition
   def compose_or(other)
     if self.sql.empty?
       if other.sql.empty?
-        return SQL::Maker::Condition.new
+        return new_condition
       end
-      return SQL::Maker::Condition.new(
+      return new_condition(
         :sql => ['(' + other.as_sql() + ')'],
         :bind => other.bind,
       )
     end
     if other.sql.empty?
-      return SQL::Maker::Condition.new(
+      return new_condition(
         :sql => ['(' + self.as_sql() + ')'],
         :bind => self.bind,
       )
@@ -164,16 +175,16 @@ class SQL::Maker::Condition
 
     # return value is enclosed with '()'.
     # because 'OR' operator priority less than 'AND'.
-    return SQL::Maker::Condition.new(
+    return new_condition(
       :sql => ['((' + self.as_sql() + ') OR (' + other.as_sql() + '))'],
       :bind => self.bind + other.bind,
     )
   end
 
   def as_sql
-    self.sql.join(' AND ')
+    sql = self.sql.join(' AND ')
+    @auto_bind ? bind_param(sql, self.bind) : sql
   end
-  alias_method :to_s, :as_sql
 end
 
 __END__

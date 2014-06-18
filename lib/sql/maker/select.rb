@@ -9,6 +9,12 @@ class SQL::Maker::Select
     :index_hint, :group_by, :order_by, :where, :having, :for_update, :subqueries
 
   def initialize(args = {})
+    @quote_char = args[:quote_char] || ''
+    @name_sep = args[:name_sep] || '.'
+    @new_line = args[:new_line] || "\n"
+    @strict = args[:strict] || false
+    @auto_bind = args[:auto_bind] || false
+
     @select = args[:select] || []
     @distinct = args[:distinct] || false
     @select_map = args[:select_map] || {}
@@ -19,16 +25,11 @@ class SQL::Maker::Select
     @group_by = args[:group_by] || []
     @order_by = args[:order_by] || []
     @prefix = args[:prefix] || 'SELECT '
-    @new_line = args[:new_line] || "\n"
-    @strict = args[:strict] || false
-    @auto_bind = args[:auto_bind] || false
     @where = args[:where]
     @having = args[:having]
     @limit = args[:limit]
     @offset = args[:offset]
     @for_update = args[:for_update]
-    @quote_char = args[:quote_char]
-    @name_sep = args[:name_sep]
     @subqueries = []
   end
 
