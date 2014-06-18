@@ -26,3 +26,11 @@ See [CHANGELOG.md](CHANGELOG.md) for details.
 
 Copyright (c) 2014 Naotoshi Seo. See [LICENSE.txt](LICENSE.txt) for details.
 
+## Acknowledgement
+
+Ruby SQL::Maker is a ruby port of following perl modules: 
+
+1. https://github.com/tokuhirom/SQL-Maker
+2. https://github.com/kazuho/SQL-QueryMaker
+
+Thank you very much!!!
