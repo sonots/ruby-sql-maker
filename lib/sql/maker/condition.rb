@@ -189,9 +189,6 @@ end
 
 __END__
 
-=for test_synopsis
-my (sql, @bind)
-
 =head1 NAME
 
 SQL::Maker::Condition - condition object for SQL::Maker
@@ -204,8 +201,8 @@ SQL::Maker::Condition - condition object for SQL::Maker
     )
     condition.add('foo_id' => 3)
     condition.add('bar_id' => 4)
-    sql = condition.as_sql() # (`foo_id`=?) AND (`bar_id`=?)
-    @bind = condition.bind()  # (3, 4)
+    sql = condition.as_sql # (`foo_id`=?) AND (`bar_id`=?)
+    bind = condition.bind  # (3, 4)
 
     # add_raw
     my condition = SQL::Maker::Condition.new(
@@ -214,8 +211,8 @@ SQL::Maker::Condition - condition object for SQL::Maker
     )
     condition.add_raw('EXISTS(SELECT * FROM bar WHERE name = ?)' => ['john'])
     condition.add_raw('type IS NOT NULL')
-    sql = condition.as_sql() # (EXISTS(SELECT * FROM bar WHERE name = ?)) AND (type IS NOT NULL)
-    @bind = condition.bind()  # ('john')
+    sql = condition.as_sql # (EXISTS(SELECT * FROM bar WHERE name = ?)) AND (type IS NOT NULL)
+    bind = condition.bind  # ('john')
 
     # composite and
     my other = SQL::Maker::Condition.new(
@@ -223,14 +220,14 @@ SQL::Maker::Condition - condition object for SQL::Maker
         quote_char => '`',
     )
     other.add('name' => 'john')
-    my $comp_and = condition & other
-    sql = $comp_and.as_sql() # ((`foo_id`=?) AND (`bar_id`=?)) AND (`name`=?)
-    @bind = $comp_and.bind()  # (3, 4, 'john')
+    comp_and = condition & other
+    sql = comp_and.as_sql # ((`foo_id`=?) AND (`bar_id`=?)) AND (`name`=?)
+    bind = comp_and.bind  # (3, 4, 'john')
 
     # composite or
-    my $comp_or = condition | other
-    sql = $comp_and.as_sql() # ((`foo_id`=?) AND (`bar_id`=?)) OR (`name`=?)
-    @bind = $comp_and.bind()  # (3, 4, 'john')
+    comp_or = condition | other
+    sql = comp_and.as_sql # ((`foo_id`=?) AND (`bar_id`=?)) OR (`name`=?)
+    bind = comp_and.bind  # (3, 4, 'john')
 
 
 =head1 CONDITION CHEAT SHEET
@@ -256,10 +253,6 @@ Here is a cheat sheet for conditions.
     IN:        {'foo'=>{'!=' => 'bar'}}
     OUT QUERY: '`foo` != ?'
     OUT BIND:  ['bar']
-
-#    IN:        {'foo'=>\'IS NOT NULL'}
-#    OUT QUERY: '`foo` IS NOT NULL'
-#    OUT BIND:  []
 
     IN:        {'foo'=>{'between' => ['1','2']}}
     OUT QUERY: '`foo` BETWEEN ? AND ?'
@@ -331,7 +324,7 @@ It is also possible to use the functions exported by C<SQL::QueryMaker> to defin
     OUT QUERY: '`foo` != ?'
     OUT BIND:  ['bar']
 
-    IN:        {'foo' => sql_is_not_null()}
+    IN:        {'foo' => sql_is_not_null}
     OUT QUERY: '`foo` IS NOT NULL'
     OUT BIND:  []
 

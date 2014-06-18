@@ -85,14 +85,14 @@ SQL::Maker::SelectSet - provides set functions
 
 =head1 SYNOPSIS
 
-    use SQL::Maker::SelectSet qw(union_all except)
-    s1 = SQL::Maker::Select .new()
-                                .add_select('foo')
-                                .add_from('t1')
-    s2 = SQL::Maker::Select .new()
-                                .add_select('bar')
-                                .add_from('t2')
-    union_all( s1, s2 ).as_sql
+    include SQL::Maker::Helper
+    s1 = SQL::Maker::Select.new()
+      .add_select('foo')
+      .add_from('t1')
+    s2 = SQL::Maker::Select.new()
+      .add_select('bar')
+      .add_from('t2')
+    sql_union_all( s1, s2 ).as_sql
     # =>
     #  SQL::Maker::SelectSet.new_set(
     #      :operator => 'UNION ALL',
@@ -117,27 +117,27 @@ inherited from L<SQL::Maker::Select>.
 
 =over 4
 
-=item C<< union(select :SQL::Maker::Select | set :SQL::Maker::SelectSet) : SQL::Maker::SelectSet >>
+=item C<< sql_union(select :SQL::Maker::Select | set :SQL::Maker::SelectSet) : SQL::Maker::SelectSet >>
 
 Tow statements are combined by C<UNION>.
 
-=item C<< union_all(select :SQL::Maker::Select | set :SQL::Maker::SelectSet) : SQL::Maker::SelectSet >>
+=item C<< sql_union_all(select :SQL::Maker::Select | set :SQL::Maker::SelectSet) : SQL::Maker::SelectSet >>
 
 Tow statements are combined by C<UNION ALL>.
 
-=item C<< intersect(select :SQL::Maker::Select | set :SQL::Maker::SelectSet) : SQL::Maker::SelectSet >>
+=item C<< sql_intersect(select :SQL::Maker::Select | set :SQL::Maker::SelectSet) : SQL::Maker::SelectSet >>
 
 Tow statements are combined by C<INTERSECT>.
 
-=item C<< intersect_all(select :SQL::Maker::Select | set :SQL::Maker::SelectSet) : SQL::Maker::SelectSet >>
+=item C<< sql_intersect_all(select :SQL::Maker::Select | set :SQL::Maker::SelectSet) : SQL::Maker::SelectSet >>
 
 Tow statements are combined by C<INTERSECT ALL>.
 
-=item C<< except(select :SQL::Maker::Select | set :SQL::Maker::SelectSet) : SQL::Maker::SelectSet >>
+=item C<< sql_except(select :SQL::Maker::Select | set :SQL::Maker::SelectSet) : SQL::Maker::SelectSet >>
 
 Tow statements are combined by C<EXCEPT>.
 
-=item C<< except(select :SQL::Maker::Select | set :SQL::Maker::SelectSet) : SQL::Maker::SelectSet >>
+=item C<< sql_except(select :SQL::Maker::Select | set :SQL::Maker::SelectSet) : SQL::Maker::SelectSet >>
 
 Tow statements are combined by C<EXCEPT ALL>.
 
@@ -147,7 +147,7 @@ Tow statements are combined by C<EXCEPT ALL>.
 
 =over 4
 
-=item stmt = SQL::Maker::SelectSet.new( %args )
+=item stmt = SQL::Maker::SelectSet.new( args )
 
 opretaor is a set operator (ex. C<UNION>).
 one and another are SQL::Maker::Select object or SQL::Maker::SelectSet object.
@@ -173,15 +173,15 @@ The operator. This parameter is required.
 
 =over 4
 
-=item C<< sql = set.as_sql() : Str >>
+=item C<< sql = set.as_sql : Str >>
 
 Returns a new select statement.
 
-=item C<< @bind = set.bind() : Array[Str] >>
+=item C<< bind = set.bind : Array[Str] >>
 
 Returns bind variables.
 
-=item C<< set.add_statement(stmt : stmt.can('as_sql')) : SQL::Maker::SelectSet >>
+=item C<< set.add_statement(stmt) : SQL::Maker::SelectSet >>
 
 This method adds new statement object. C<< stmt >> must provides 'as_sql' method.
 

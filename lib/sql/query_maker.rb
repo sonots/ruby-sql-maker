@@ -161,6 +161,8 @@ class SQL::QueryMaker
       }, bind)
     end
 
+    # sql_raw('SELECT foo_id FROM bar WHERE t=44')
+    # sql_raw('SELECT foo_id FROM bar WHERE t=?', [44])
     def sql_raw(*args)
       sql, bind = parse_args(*args)
       return SQL::QueryMaker.new(nil, Proc.new { sql }, bind)

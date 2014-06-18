@@ -434,35 +434,29 @@ This method returns the SQL string and bind variables for a SELECT statement.
 
 =item C<< table >>
 
-=item C<< \@tables >>
-
 Table name for the B<FROM> clause as scalar or arrayref. You can specify the instance of B<SQL::Maker::Select> for a sub-query.
 
 If you are using C<< opt.joins >> this should be I<< undef >> since it's passed via the first join.
 
-=item C<< \@fields >>
+=item C<< fields >>
 
 This is a list for retrieving fields from database.
 
-Each element of the C<@fields> is normally a scalar or a scalar ref containing the column name.
-If you want to specify an alias of the field, you can use an arrayref containing a pair
+Each element of the C<fields> is normally an array of column names.
+If you want to specify an alias of the field, you can use an array of hashes containing a pair
 of column and alias names (e.g. C<< ['foo.id' => 'foo_id'] >>).
-
-=item C<< \%where >>
-
-=item C<< \@where >>
 
 =item C<< where >>
 
-where clause from hashref or arrayref via L<SQL::Maker::Condition>, or L<SQL::Maker::Condition> object.
+where clause from hash or array via L<SQL::Maker::Condition>, or L<SQL::Maker::Condition> object.
 
-=item C<< \%opt >>
+=item C<< opt >>
 
 These are the options for the SELECT statement
 
 =over 4
 
-=item C<< opt.prefix >>
+=item C<< opt[:prefix] >>
 
 This is a prefix for the SELECT statement.
 
@@ -470,15 +464,15 @@ For example, you can provide the 'SELECT SQL_CALC_FOUND_ROWS '. It's useful for 
 
 Default Value: 'SELECT '
 
-=item C<< opt.limit >>
+=item C<< opt[:limit] >>
 
 This option adds a 'LIMIT n' clause.
 
-=item C<< opt.offset >>
+=item C<< opt[:offset] >>
 
 This option adds an 'OFFSET n' clause.
 
-=item C<< opt.order_by >>
+=item C<< opt[:order_by] >>
 
 This option adds an B<ORDER BY> clause
 
@@ -489,7 +483,7 @@ You can write it in any of the following forms:
     builder.select(..., {:order_by => {:foo => 'DESC'}})
     builder.select(..., {:order_by => [{:foo => 'DESC'}, {:bar => 'ASC'}]})
 
-=item C<< opt.group_by >>
+=item C<< opt[:group_by] >>
 
 This option adds a B<GROUP BY> clause
 
@@ -500,23 +494,23 @@ You can write it in any of the following forms:
     builder.select(..., {:group_by => {:foo => 'DESC'}})
     builder.select(..., {:group_by => [{:foo => 'DESC'}, {:bar => 'ASC'}]})
 
-=item C<< opt.having >>
+=item C<< opt[:having] >>
 
 This option adds a HAVING clause
 
-=item C<< opt.for_update >>
+=item C<< opt[:for_update] >>
 
 This option adds a 'FOR UPDATE" clause.
 
-=item C<< opt.joins >>
+=item C<< opt[:joins] >>
 
 This option adds a 'JOIN' via L<SQL::Maker::Select>.
 
 You can write it as follows:
 
-    builder.select(undef, ..., {:joins => [[:user => {:table => 'group', :condition => 'user.gid = group.gid'}], ...]})
+    builder.select(nil, ..., {:joins => [[:user => {:table => 'group', :condition => 'user.gid = group.gid'}], ...]})
 
-=item C<< opt.index_hint >>
+=item C<< opt[:index_hint] >>
 
 This option adds an INDEX HINT like as 'USE INDEX' clause for MySQL via L<SQL::Maker::Select>.
 
@@ -531,9 +525,9 @@ You can write it as follows:
 
 =back
 
-=item C<< sql, bind = builder.insert(table, \%values|\@values, \%opt); >>
+=item C<< sql, bind = builder.insert(table, values, opt); >>
 
-    sql, bind = builder.insert(:user => {:name => 'john'})
+    sql, bind = builder.insert(:user, {:name => 'john'})
     # =>
     #    INSERT INTO `user` (`name`) VALUES (?)
     #    ['john']
@@ -544,19 +538,19 @@ Generate an INSERT query.
 
 =item C<< table >>
 
-Table name in scalar.
+Table name
 
-=item C<< \%values >>
+=item C<< values >>
 
 These are the values for the INSERT statement.
 
-=item C<< \%opt >>
+=item C<< opt >>
 
 These are the options for the INSERT statement
 
 =over 4
 
-=item C<< opt.prefix >>
+=item C<< opt[:prefix] >>
 
 This is a prefix for the INSERT statement.
 
@@ -568,9 +562,9 @@ Default Value: 'INSERT INTO'
 
 =back
 
-=item C<< sql, bind = builder.delete(table, \%where|\@where|where, \%opt); >>
+=item C<< sql, bind = builder.delete(table, where, opt) >>
 
-    sql, bind = builder.delete(table, \%where)
+    sql, bind = builder.delete(table, where)
     # =>
     #    DELETE FROM `user` WHERE (`name` = ?)
     #    ['john']
@@ -581,27 +575,23 @@ Generate a DELETE query.
 
 =item C<< table >>
 
-Table name in scalar.
-
-=item C<< \%where >>
-
-=item C<< \@where >>
+Table name
 
 =item C<< where >>
 
-where clause from hashref or arrayref via L<SQL::Maker::Condition>, or L<SQL::Maker::Condition> object.
+where clause from hash or array, or L<SQL::Maker::Condition> object.
 
-=item C<< \%opt >>
+=item C<< opt >>
 
 These are the options for the DELETE statement
 
 =over 4
 
-=item C<< opt.using >>
+=item C<< opt[:using] >>
 
 This option adds a USING clause. It takes a scalar or an arrayref of table names as argument:
 
-    (sql, bind) = bulder.delete(table, \%where, { :using => 'group' })
+    (sql, bind) = bulder.delete(table, where, { :using => 'group' })
     # =>
     #    DELETE FROM `user` USING `group` WHERE (`group`.`name` = ?)
     #    ['doe']
@@ -611,7 +601,7 @@ This option adds a USING clause. It takes a scalar or an arrayref of table names
 
 =back
 
-=item C<< sql, bind = builder.update(table, \%set|@set, \%where|\@where|where); >>
+=item C<< sql, bind = builder.update(table, set, where) >>
 
 Generate a UPDATE query.
 
@@ -624,19 +614,15 @@ Generate a UPDATE query.
 
 =item table
 
-Table name in scalar.
+Table name
 
-=item \%set
+=item set
 
 Setting values.
 
-=item \%where
-
-=item \@where
-
 =item where
 
-where clause from a hashref or arrayref via L<SQL::Maker::Condition>, or L<SQL::Maker::Condition> object.
+where clause from a hash or array, or L<SQL::Maker::Condition> object.
 
 =back
 
@@ -646,7 +632,7 @@ Create new L<SQL::Maker::Condition> object from C< builder > settings.
 
 =item C<< sql, bind = builder.where(where) >>
 
-Where clause from a hashref or arrayref via L<SQL::Maker::Condition>, or L<SQL::Maker::Condition> object.
+Where clause from a hash or array, or L<SQL::Maker::Condition> object.
 
 =back
 
@@ -671,6 +657,6 @@ I wanted simpler one than Arel.
 
 =head1 SEE ALSO
 
-https://github.com/tokuhirom/SQL-Maker
+Perl version is located at https://github.com/tokuhirom/SQL-Maker
 
 =cut
