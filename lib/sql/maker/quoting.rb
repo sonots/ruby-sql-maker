@@ -1,5 +1,6 @@
 # reference: ActiveRecord::ConnectionAdapter::Quoting
 require 'yaml'
+require 'bigdecimal'
 
 module SQL::Maker::Quoting
   # Quotes the value rather than column name to help prevent
