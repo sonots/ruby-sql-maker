@@ -5,6 +5,43 @@
 
 SQL Builder for Ruby
 
+## Installation
+
+Add the following to your `Gemfile`:
+
+```ruby
+gem 'sql-maker'
+```
+
+And then execute:
+
+```plain
+$ bundle
+```
+
+## Example
+
+```ruby
+require 'sql-maker'
+builder = SQL::Maker::Select.new(:quote_char => '"', :auto_bind => true)
+builder.add_select('id').add_from('books').add_where('books.id' => 1).as_sql
+#=> SELECT "id" FROM "books" WHERE "books"."id" = 1
+```
+
+To avoid quoting the column name, use `sql_raw`.
+
+```ruby
+require 'sql-maker'
+include SQL::Maker::Helper # adds sql_raw, etc
+builder = SQL::Maker::Select.new(:quote_char => '"', :auto_bind => true)
+builder.add_select(sql_raw('COUNT(*)')).add_from('books').as_sql
+# => SELECT COUNT(*) FROM "books"
+```
+
+## Further Reading
+
+Please see the [document](http://sonots.github.io/ruby-sql-maker/) page.
+
 ## ChangeLog
 
 See [CHANGELOG.md](CHANGELOG.md) for details.
@@ -12,7 +49,6 @@ See [CHANGELOG.md](CHANGELOG.md) for details.
 ## ToDo
 
 1. Support plugins
-2. Write documents
 
 ## Contributing
 
