@@ -22,12 +22,12 @@ def test(input, expected_term, expected_bind)
 end
 
 begin
-  file = File.open("#{ROOT}/lib/sql/maker/condition.rb")
+  file = File.open("#{ROOT}/doc/sql/maker/condition.md")
   while line = file.gets
-    break if line =~ /=head1 CONDITION CHEAT SHEET/
+    break if line =~ /CONDITION CHEAT SHEET/
   end
   while line = file.gets
-    next if line =~ /^#/
+    next if line =~ /^ *#/
     src = $1 if line =~ /IN:\s*(.+)\s*$/
     query = eval($1, binding) if line =~ /OUT QUERY:(.+)/
     if line =~ /OUT BIND:(.+)/
