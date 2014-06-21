@@ -17,9 +17,9 @@ def test(src, expected_term, expected_bind)
 end
 
 begin
-  file = File.open("#{ROOT}/lib/sql/query_maker.rb")
+  file = File.open("#{ROOT}/doc/sql/query_maker.md")
   while line = file.gets
-    break if line =~ /=head1 CHEAT SHEET/
+    break if line =~ /CHEAT SHEET/
   end
   while line = file.gets
     src = $1 if line =~ /IN:\s*(.+)\s*$/
