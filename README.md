@@ -40,14 +40,7 @@ builder.add_select(sql_raw('COUNT(*)')).add_from('books').as_sql
 
 ## Further Reading
 
-Please see the [doc](./doc/sql) directory.
-
-* [sql/maker.md](./doc/sql/maker.md)
-* [sql/maker/select.md](./doc/sql/maker/select.md)
-* [sql/maker/condition.md](./doc/sql/maker/condition.md)
-* [sql/maker/helper.md](./doc/sql/maker/helper.md)
-* [sql/maker/select_set.md](./doc/sql/maker/select_set.md)
-* [sql/queyr_maker.md](./doc/sql/maker.md)
+Please see the [doc](./doc) directory.
 
 ## ChangeLog
 
