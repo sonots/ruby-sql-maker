@@ -1,3 +1,9 @@
+## 0.0.3 (2014/06/21)
+
+Fixes:
+
+* require BigDecimal for quoting
+
 ## 0.0.2 (2014/06/18)
 
 Enhancements:
