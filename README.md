@@ -42,6 +42,44 @@ builder.add_select(sql_raw('COUNT(*)')).add_from('books').as_sql
 
 Please see the [doc](./doc) directory.
 
+## The JSON SQL Injection Vulnerability
+
+Both perl and ruby verion of SQL::Maker has a JSON SQL Injection Vulnerability if not used in `strict` mode.
+
+Therefore, I strongly recommend to use SQL::Maker in `strict` mode.
+You can turn on the `strict` mode by passing `:strict => true` as:
+
+```ruby
+SQL::Maker.new(...., :strict => true)
+SQL::Maker::Select.new(...., :strict => true)
+```
+
+In strict mode, array or hash conditions are not accepted anymore. A sample usage snippet is shown in below:
+
+```ruby
+require 'sql-maker'
+include SQL::Maker::Helper # adds SQL::QueryMaker functions such as sql_le, etc
+
+builder = SQL::Maker::Select.new(:strict => true)
+
+builder.select('user', ['*'], {:name => json['name']}) 
+#=> SELECT * FROM `user` WHERE `name` = ?
+
+builder.select('user', ['*'], {:name => ['foo', 'bar']})
+#=> SQL::Maker::Error! Will not generate SELECT * FROM `name` IN (?, ?) any more
+
+builder.select('user', ['*'], {:name => sql_in(['foo', 'bar'])})
+#=> SELECT * FROM `user` WHERE `name` IN (?, ?)
+
+builder.select('fruit', ['*'], {:price => sql_le(json['max_price'])})
+#=> SELECT * FROM `fruit` WHERE `price` <= ?
+```
+
+See following articles for more details (perl version)
+
+* http://blog.kazuhooku.com/2014/07/the-json-sql-injection-vulnerability.html (English)
+* http://developers.mobage.jp/blog/2014/7/3/jsonsql-injection (Japanese)
+
 ## ChangeLog
 
 See [CHANGELOG.md](CHANGELOG.md) for details.
