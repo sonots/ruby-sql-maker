@@ -13,6 +13,7 @@ describe 'SQL::Maker' do
 
   it "maker.new_condition" do
     expect { maker.new_condition.add(:foo => [1]) }.to raise_error(SQL::Maker::Error)
+    expect { maker.new_condition.add(:foo => {'!=' => ''}) }.to raise_error(SQL::Maker::Error)
   end
 
   it "select.new_condition" do

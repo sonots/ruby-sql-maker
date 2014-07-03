@@ -44,7 +44,7 @@ class SQL::Maker::Condition
     if val.is_a?(SQL::QueryMaker)
       return [val.as_sql(col, self.method(:_quote)), val.bind]
     elsif self.strict
-      croak("can pass only SQL::QueryMaker as an argument in strict mode")
+      croak("Condition#add: can pass only SQL::QueryMaker object as an argument in strict mode")
     end
 
     if val.is_a?(Array)
@@ -57,18 +57,17 @@ class SQL::Maker::Condition
       end
     elsif val.is_a?(Hash)
       op, v = val.each.first
-      op = op.upcase.to_s
+      op = op.to_s.upcase
       if ( op == 'AND' || op == 'OR' ) && v.is_a?(Array)
-        # {'foo'=>[{'>' => 'bar'},{'<' => 'baz'}]} => (`foo` > ?) OR (`foo` < ?)
+        # {'foo'=>{'or' => [{'>' => 'bar'},{'<' => 'baz'}]}} => (`foo` > ?) OR (`foo` < ?)
         return self._make_or_term(col, op, v)
       elsif ( op == 'IN' || op == 'NOT IN' )
+        # {'foo'=>{'in' => ['bar','baz']}} => `foo` IN (?, ?)
         return self._make_in_term(col, op, v)
       elsif ( op == 'BETWEEN' ) && v.is_a?(Array)
-        croak("USAGE: make_term(foo => {BETWEEN => [a, b]})") if v.size != 2
+        croak("USAGE: add(foo => {BETWEEN => [a, b]})") if v.size != 2
         return [self._quote(col) + " BETWEEN ? AND ?", v]
       else
-        # make_term(foo => { '<' => \"DATE_SUB(NOW(), INTERVAL 3 DAY)"}) => 'foo < DATE_SUB(NOW(), INTERVAL 3 DAY)'
-        # return [self._quote(col) + " op " + v, []]
         # make_term(foo => { '<' => 3 }) => foo < 3
         return [self._quote(col) + " #{op} ?", [v]]
       end
