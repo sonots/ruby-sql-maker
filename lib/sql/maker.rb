@@ -84,11 +84,12 @@ class SQL::Maker
         columns += [val.as_sql(nil, Proc.new {|e| self._quote(e) })]
         bind_columns += val.bind
       else
-        croak("cannot pass in an unblessed ref as an argument in strict mode") if self.strict
-        if val.is_a?(Hash)
-          # builder.insert(:foo => { :created_on => ["NOW()"] })
-          columns += [val]
-        elsif val.is_a?(Array)
+        if val.is_a?(Array) && self.strict
+          croak("cannot pass in an unblessed ref as an argument in strict mode")
+        end
+
+        if val.is_a?(Array)
+          # builder.insert( :foo => { :created_on => ["NOW()"] })
           # builder.insert( :foo => [ 'UNIX_TIMESTAMP(?)', '2011-04-12 00:34:12' ] )
           stmt, sub_bind = [val.first, val[1..-1]]
           columns += [stmt]
@@ -181,14 +182,13 @@ class SQL::Maker
         columns += ["#{quoted_col} = " + val.as_sql(nil, Proc.new {|label| self._quote(label) })]
         bind_columns += val.bind
       else
-        if self.strict
+        if val.is_a?(Array) && self.strict
           croak("cannot pass in an unblessed ref as an argument in strict mode")
-          if val.is_a?(Hash)
-            # builder.update(:foo => { :created_on => \"NOW()" })
-            # columns += ["quoted_col = " + $val
-          end
-        elsif val.is_a?(Array)
-          # builder.update( :foo => \[ 'VALUES(foo) + ?', 10 ] )
+        end
+
+        if val.is_a?(Array)
+          # builder.update( :foo => [ 'NOW()' ] )
+          # builder.update( :foo => [ 'VALUES(foo) + ?', 10 ] )
           stmt, sub_bind = [val.first, val[1..-1]]
           columns += ["#{quoted_col} = " + stmt]
           bind_columns += sub_bind
