@@ -1,3 +1,9 @@
+## 0.0.4 (2014/09/14)
+
+Fixes:
+
+* Fixed strict mode for insert/update (thanks to memememomo)
+
 ## 0.0.3 (2014/06/21)
 
 Fixes:
