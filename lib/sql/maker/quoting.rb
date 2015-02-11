@@ -73,9 +73,14 @@ module SQL::Maker::Quoting
   end
 
   # Quotes a string, escaping any ' (single quote) and \ (backslash)
-  # characters.
+  # characters as SQL escape
   def self.quote_string(s)
     s.gsub(/\\/, '\&\&').gsub(/'/, "''") # ' (for ruby-mode)
+  end
+
+  # alias to module function quote_string
+  def self.escape(s)
+    quote_string(s)
   end
 
   # # def quote_string(s)
