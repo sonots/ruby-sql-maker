@@ -1,3 +1,9 @@
+## 0.0.5 (2015/02/11)
+
+Enhancements:
+
+* Add SQL::Maker::Quoting.escape as alias to SQL::Maker::Quoting.quote_string
+
 ## 0.0.4 (2014/09/14)
 
 Fixes:
