@@ -1,7 +1,6 @@
 # ruby-sql-maker
 
 [![Build Status](https://secure.travis-ci.org/sonots/ruby-sql-maker.png?branch=master)](http://travis-ci.org/sonots/ruby-sql-maker)
-[![Coverage Status](https://coveralls.io/repos/sonots/ruby-sql-maker/badge.png?branch=master)](https://coveralls.io/r/sonots/ruby-sql-maker?branch=master)
 
 SQL Builder for Ruby
 
@@ -36,6 +35,13 @@ include SQL::Maker::Helper # adds sql_raw, etc
 builder = SQL::Maker::Select.new(:quote_char => '"', :auto_bind => true)
 builder.add_select(sql_raw('COUNT(*)')).add_from('books').as_sql
 # => SELECT COUNT(*) FROM "books"
+```
+
+You may want to use quoting or SQL escape function together with `sql_raw`. 
+
+```ruby
+SQL::Maker::Quoting.quote("gi'thubber's")  #=> 'gi''thubber''s'
+SQL::Maker::Quoting.escape("gi'thubber's") #=> gi''thubber''s
 ```
 
 ## Further Reading
@@ -79,14 +85,6 @@ See following articles for more details (perl version)
 
 * http://blog.kazuhooku.com/2014/07/the-json-sql-injection-vulnerability.html (English)
 * http://developers.mobage.jp/blog/2014/7/3/jsonsql-injection (Japanese)
-
-## SQL Escape
-
-SQL Maker automatically does escape, but when you want to do it manually by some reasons, call
-
-```
-SQL::Maker::Quoting.quote(string)
-```
 
 ## See Also
 
