@@ -80,6 +80,18 @@ See following articles for more details (perl version)
 * http://blog.kazuhooku.com/2014/07/the-json-sql-injection-vulnerability.html (English)
 * http://developers.mobage.jp/blog/2014/7/3/jsonsql-injection (Japanese)
 
+## SQL Escape
+
+SQL Maker automatically does escape, but when you want to do it manually by some reasons, call
+
+```
+SQL::Maker::Quoting.quote(string)
+```
+
+## See Also
+
+* [perl の SQL::Maker (と SQL::QueryMaker) を ruby に移植した - sonots:blog](http://blog.livedoor.jp/sonots/archives/38723820.html) (Japanese)
+
 ## ChangeLog
 
 See [CHANGELOG.md](CHANGELOG.md) for details.
