@@ -37,11 +37,11 @@ builder.add_select(sql_raw('COUNT(*)')).add_from('books').as_sql
 # => SELECT COUNT(*) FROM "books"
 ```
 
-You may want to use quoting or SQL escape function together with `sql_raw`. 
+You may want to quote or escape on using `sql_raw`. 
 
 ```ruby
-SQL::Maker::Quoting.quote("gi'thubber's")  #=> 'gi''thubber''s'
-SQL::Maker::Quoting.escape("gi'thubber's") #=> gi''thubber''s
+SQL::Maker::Quoting.quote("githubber's")  #=> 'githubber''s'
+SQL::Maker::Quoting.escape("githubber's") #=> githubber''s
 ```
 
 ## Further Reading
