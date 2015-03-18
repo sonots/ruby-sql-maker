@@ -4,7 +4,7 @@ SQL::Maker::Condition - condition object for SQL::Maker
 
 # SYNOPSIS
 
-    my condition = SQL::Maker::Condition.new(
+    condition = SQL::Maker::Condition.new(
         name_sep   => '.',
         quote_char => '`',
     )
@@ -14,7 +14,7 @@ SQL::Maker::Condition - condition object for SQL::Maker
     bind = condition.bind  # (3, 4)
 
     # add_raw
-    my condition = SQL::Maker::Condition.new(
+    condition = SQL::Maker::Condition.new(
         name_sep   => '.',
         quote_char => '`',
     )
@@ -24,7 +24,7 @@ SQL::Maker::Condition - condition object for SQL::Maker
     bind = condition.bind  # ('john')
 
     # composite and
-    my other = SQL::Maker::Condition.new(
+    other = SQL::Maker::Condition.new(
         name_sep => '.',
         quote_char => '`',
     )
