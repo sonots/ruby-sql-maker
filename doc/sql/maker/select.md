@@ -112,7 +112,7 @@ it falls back to plain JOIN.
     stmt.as_sql
     # => "SELECT name FROM user USE INDEX (index_hint)"
 
-### stmt.add_where('foo_id' => 'bar');
+### stmt.add_where('foo_id' => 'bar')
 
 Add a new WHERE clause.
 
@@ -151,9 +151,9 @@ condition should be instance of SQL::Maker::Condition.
                                  .as_sql
     # => "SELECT c FROM foo WHERE ((name = ?)) AND ((type IN (?, ?, ?)))"
 
-### stmt.add_order_by('foo');
+### stmt.add_order_by('foo')
 
-### stmt.add_order_by({'foo' => 'DESC'});
+### stmt.add_order_by({'foo' => 'DESC'})
 
 Add a new ORDER BY clause.
 
@@ -164,7 +164,7 @@ Add a new ORDER BY clause.
                                  .as_sql
     # => "SELECT c FROM foo ORDER BY name DESC, id"
 
-### stmt.add_group_by('foo');
+### stmt.add_group_by('foo')
 
 Add a new GROUP BY clause.
 
